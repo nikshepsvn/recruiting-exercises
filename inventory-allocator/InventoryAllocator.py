@@ -12,10 +12,10 @@ class InventoryAllocator:
     -------
 
     allocate_shipment(order)
-        Allocate's the given shipment accross different warehouses
+        Returns result after allocating the given shipment across different warehouses (prioritizing cheapest one first)
     
     add_warehouse_inventory(inventory)
-        Used to re-stock/add items to the warehouses.
+        Used to re-stock/add items to the warehouses with passed inventory.
     
     InventoryAllocator(inventory)
         Creates an instance of the class with the inventory set to what is passed.
