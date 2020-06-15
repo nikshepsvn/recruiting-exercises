@@ -1,4 +1,85 @@
+## Solution
 
+#### Author: Nikshep Saravanan
+#### Email: nikshepsvn@gmail.com
+
+I have used Python 3 to solve this problem. Below is a high-level overview of my approach to solve this problem and some notes on the implementation.
+
+### Implementation
+
+#### Calling the method
+ 
+I started off by implementing the `InventoryAllocator` class and the `allocate_shipment` method. 
+
+We initialize the class by calling it with the warehouse inventory data as such `InventoryAllocator(inventory_data)`.
+
+We can then pass the order to the allocate_shipment method as such `allocate_shipment(order)` to get the cheapest possible shipment.
+
+Both of these combined would look like the following
+
+```
+inventory_data = [{ "name": "owd", "inventory": { "apple": 1 } }]
+order = { "apple": 1 }
+
+inventory_allocator = InventoryAllocator(inventory_data)
+result = inventory_allocator.allocate_shipment(order)
+
+print(result) 
+> [{ owd: { apple: 1 } }]
+
+```
+
+#### Bonus
+In order to enable `InventoryAllocator` to be re-used for multiple orders/shipments I have implemented an additional `add_warehouse_inventory` method that can be used to update the inventories of items in the warehouses of the current `InventoryAllocator`. This way as items are re-stocked/added, we can update our `InventoryAllocator`, and re-use it to create new shipments by calling the `allocate_shipment` method.
+
+```
+inventory_data = [{ "name": "owd", "inventory": { "apple": 1 } }]
+inventory_allocator = InventoryAllocator(inventory_data)
+
+print(inventory_allocator.warehouse_data) 
+> [('owd', {'apple': 1})]
+
+new_inventory_data = [{ "name": "owd", "inventory": { "apple": 5 } }]
+inventory_allocator.add_warehouse_inventory(new_inventory_data)
+
+print(inventory_allocator.warehouse_data) 
+> [('owd', {'apple': 6})]
+
+new_inventory_data = [{ "name": "owd", "inventory": { "orange": 1 } }]
+inventory_allocator.add_warehouse_inventory(new_inventory_data)
+
+print(inventory_allocator.warehouse_data) 
+> [('owd', {'apple': 6, 'orange': 1})]
+```
+
+
+#### The approach 
+
+My approach to solve the problem is rather simple:
+1. I start off my iterating through the items in our order and checking each item agaisnt all the warehouses. 
+    1. If the warehouse can fulfill our item, we save that information and move on to our next item.
+    2. If not, we fulfill as much of the item as we can and check the next warehouse. 
+    3. In the end, if we are not able to fulfill an item completely then we do not allocate the order.
+2. After fulfilling a single item, we take the next item, and check all the warehouses (in order of cost) and so on.
+
+### Unit tests
+
+The tests I have written are as follows:
+
+* Exact match
+* Not enough inventory -> no allocations!
+* Split single item across warehouses if only way to ship item
+* Split multiple item across warehoses if only way to ship item
+* Take item from cheapest warehouse when given choice
+* Handle case where warehouse 'has' item but 0 quantity
+* Not enough inventory for some items -> no allocations!
+* Not enough inventory for mutliple items -> no allocations!
+
+To run the unit tests, run `python3 InventoryAllocatorTest.py`
+
+
+&nbsp;
+-----
 
 ### Problem
 
