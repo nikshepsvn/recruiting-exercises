@@ -74,6 +74,9 @@ The tests I have written are as follows:
 * Handle case where warehouse 'has' item but 0 quantity
 * Not enough inventory for some items -> no allocations!
 * Not enough inventory for mutliple items -> no allocations!
+* Item quantity is updated in a warehouse in inventory
+* Item is added to a warehouse in inventory
+* Warehouse is added to inventory
 
 To run the unit tests, run `python3 InventoryAllocatorTest.py`
 

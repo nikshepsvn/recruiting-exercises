@@ -1,4 +1,5 @@
 import unittest
+from collections import OrderedDict
 from InventoryAllocator import InventoryAllocator
 
 
@@ -130,6 +131,45 @@ class InventoryAllocatorTest(unittest.TestCase):
 
         inventory_allocator = InventoryAllocator(inventory)
         self.assertEqual(inventory_allocator.allocate_shipment(order), expected)
+
+    def test_item_quantity_update(self):
+        """
+        This test checks that the state of the warehouse is correct when
+        an item quantity is updated 
+        """
+        inventory = [{"name": "warehouse_one", "inventory": {"apple": 1}}]
+        new_inventory = [{ "name": "warehouse_one", "inventory": { "apple": 5 } }]
+        expected = OrderedDict([("warehouse_one", {"apple": 6})])
+
+        inventory_allocator = InventoryAllocator(inventory)
+        inventory_allocator.add_warehouse_inventory(new_inventory)
+        self.assertEqual(inventory_allocator.warehouse_data, expected)
+    
+    def test_item_update(self):
+        """
+        This test checks that the state of the warehouse is correct when
+        an item is added to a warehouse
+        """
+        inventory = [{"name": "warehouse_one", "inventory": {"apple": 1}}]
+        new_inventory = [{ "name": "warehouse_one", "inventory": { "orange": 5 } }]
+        expected = OrderedDict([("warehouse_one", {"apple": 1, "orange": 5})])
+
+        inventory_allocator = InventoryAllocator(inventory)
+        inventory_allocator.add_warehouse_inventory(new_inventory)
+        self.assertEqual(inventory_allocator.warehouse_data, expected)
+
+    def test_warehouse_update(self):
+        """
+        This test checks that the state of the warehouse is correct when
+        a warehouse with item is added
+        """
+        inventory = [{"name": "warehouse_one", "inventory": {"apple": 1}}]
+        new_inventory = [{ "name": "warehouse_two", "inventory": { "orange": 5 } }]
+        expected = OrderedDict([("warehouse_one", {"apple": 1}), ('warehouse_two', {'orange': 5})])
+
+        inventory_allocator = InventoryAllocator(inventory)
+        inventory_allocator.add_warehouse_inventory(new_inventory)
+        self.assertEqual(inventory_allocator.warehouse_data, expected)
 
 
 if __name__ == "__main__":
